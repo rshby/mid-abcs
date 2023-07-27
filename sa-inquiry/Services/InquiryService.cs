@@ -31,5 +31,7 @@ namespace sa_inquiry.Services
             }
          }
       }
+
+      // public Inquiry(string? cifnum)
    }
 }

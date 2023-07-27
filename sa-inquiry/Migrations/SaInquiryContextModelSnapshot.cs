@@ -351,7 +351,7 @@ namespace sa_inquiry.Migrations
                         .HasColumnName("ZEROBALANCEDAYS")
                         .HasColumnOrder(36);
 
-                    b.ToTable("ABCS_M_DDMAST");
+                    b.ToTable("ABCS_M_DDMAST", (string)null);
                 });
 #pragma warning restore 612, 618
         }

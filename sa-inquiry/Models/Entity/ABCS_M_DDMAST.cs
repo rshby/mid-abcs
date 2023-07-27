@@ -278,9 +278,9 @@ namespace sa_inquiry.Models.Entity
       [GraphQLName("birthdate")]
       public string? BirthDate { get; set; }
 
-      [Column("JENIS_KELAMIN", Order = 55)]
-      [MaxLength(50)]
-      [GraphQLName("jenis_kelamin")]
-      public string? JenisKelamin { get; set; }
+      //[Column("JENIS_KELAMIN", Order = 55)]
+      //[MaxLength(50)]
+      //[GraphQLName("jenis_kelamin")]
+      //public string? JenisKelamin { get; set; }
    }
 }
