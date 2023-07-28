@@ -14,6 +14,8 @@ builder.Services.AddDbContext<InquiryContext>(db => db.UseMySql(connectionString
 builder.Services.AddTransient<ABCS_M_CFMAST_Repo>();
 builder.Services.AddTransient<ABCS_M_DDMAST_Repo>();
 builder.Services.AddTransient<ABCS_M_DDMEMO_Repo>();
+builder.Services.AddTransient<ABCS_M_CDMAST_Repo>();
+builder.Services.AddTransient<ABCS_M_CDMEMO_Repo>();
 
 // register Service Layer
 builder.Services.AddTransient<InterfaceInquiryService, InquiryService>();
