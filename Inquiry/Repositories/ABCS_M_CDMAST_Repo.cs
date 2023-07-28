@@ -18,7 +18,7 @@ namespace Inquiry.Repositories
       }
 
       // method untuk get data ABCS_M_CDMAST by CIFNUM
-      public async Task<List<ABCS_M_CDMAST>?> GetByCifNumAsync([Required] TransactionScope transaction, string? inputCifNum)
+      public async Task<List<ABCS_M_CDMAST>?> GetByCifNumAsync([Required] TransactionScope? transaction, string? inputCifNum)
       {
          try
          {
@@ -32,7 +32,7 @@ namespace Inquiry.Repositories
          }
          catch (Exception err)
          {
-            transaction.Dispose();
+            //transaction.Dispose();
             throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
          }
       }

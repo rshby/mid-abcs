@@ -18,16 +18,15 @@ namespace Inquiry.Repositories
       }
 
       // method to get data abcs_m_cfmast by cifnum
-      public async Task<ABCS_M_CFMAST?> GetByCifNumAsync([Required] TransactionScope transaction, string? inputCifNum)
+      public async Task<ABCS_M_CFMAST?> GetByCifNumAsync([Required] TransactionScope? transaction, string? inputCifNum)
       {
          try
          {
-            return await _db.ABCS_M_CFMAST.AsQueryable().FirstOrDefaultAsync<ABCS_M_CFMAST>(x => x.CifNum == inputCifNum);
+            return await _db.ABCS_M_CFMAST.AsQueryable().FirstOrDefaultAsync(x => x.CifNum == inputCifNum);
          }
          catch (Exception err)
          {
-            transaction.Dispose();
-            throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+            throw new GraphQLException(new ErrorBuilder().SetMessage($"{err.Message}. inner exception : {err.InnerException?.Message}").Build());
          }
       }
    }

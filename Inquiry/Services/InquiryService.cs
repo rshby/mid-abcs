@@ -27,190 +27,145 @@ namespace Inquiry.Services
       // method inquiry
       public async Task<DataCifResponse?> InquiryAsync(string? inputCifNum)
       {
-         using (var tr = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+         try
          {
-            try
+            var findCFMAST = _cfmastRepo.GetByCifNumAsync(null, inputCifNum);
+            var findDDMAST = _ddmastRepo.GetByCifNumAsync(null, inputCifNum);
+            var findCDMAST = _cdmastRepo.GetByCifNumAsync(null, inputCifNum);
+            var findCDMEMO = _cdmemoRepo.GetByCifNumAsync(null, inputCifNum);
+            var findDDMEMO = _ddmemoRepo.GetByCifNumAsync(null, inputCifNum);
+
+            // wait all task done
+            Task.WaitAll(findCFMAST, findDDMAST, findDDMEMO, findCDMAST, findDDMEMO);
+
+            if (findCFMAST.Result == null)
             {
-               List<Task>? listTask = new List<Task>();
+               return null;
+            }
 
-               var findCFMAST = new ABCS_M_CFMAST();
-               Task? taskGetCFMAST = Task.Run(() =>
+            // proses get list of rekening
+            List<DataRekeningResponse>? listRekening = new List<DataRekeningResponse>();
+
+            // jika data sudah ketemu di ddmast
+            if (findDDMAST?.Result?.Count > 0)
+            {
+               foreach (var dataDDMAST in findDDMAST.Result)
                {
-                  findCFMAST = _cfmastRepo.GetByCifNumAsync(tr, inputCifNum).Result;
-               });
-               listTask.Add(taskGetCFMAST);
-
-               var findDDMAST = new List<ABCS_M_DDMAST>();
-               Task? taskGetDDMAST = Task.Run(() =>
-               {
-                  findDDMAST = _ddmastRepo.GetByCifNumAsync(tr, inputCifNum).Result;
-               });
-               listTask.Add(taskGetDDMAST);
-
-               var findDDMEMO = new List<ABCS_M_DDMEMO>();
-               Task? taskGetDDMEMO = Task.Run(() =>
-               {
-                  findDDMEMO = _ddmemoRepo.GetByCifNumAsync(tr, inputCifNum).Result;
-               });
-               listTask.Add(taskGetDDMEMO);
-
-               var findCDMAST = new List<ABCS_M_CDMAST>();
-               Task? taskGetCDMAST = Task.Run(() =>
-               {
-                  findCDMAST = _cdmastRepo.GetByCifNumAsync(tr, inputCifNum).Result;
-               });
-               listTask.Add(taskGetCDMAST);
-
-               var findCDMEMO = new List<ABCS_M_CDMEMO>();
-               Task? taskGetCDMEMO = Task.Run(() =>
-               {
-                  findCDMEMO = _cdmemoRepo.GetByCifNumAsync(tr, inputCifNum).Result;
-               });
-               listTask.Add(taskGetCDMEMO);
-
-               // wait all task done
-               await Task.WhenAll(listTask);
-
-               if (findCFMAST == null)
-               {
-                  tr.Dispose();
-                  return null;
+                  listRekening.Add(new DataRekeningResponse()
+                  {
+                     AccountNumber = dataDDMAST.AccountNumber,
+                     AccountType = dataDDMAST.AccountType,
+                     CifNum = dataDDMAST.CifNum,
+                     Cbal = dataDDMAST.Cbal,
+                     Hold = dataDDMAST.Hold,
+                     ShortName = dataDDMAST.ShortName,
+                     ProductType = dataDDMAST.ProductType,
+                     Currency = dataDDMAST.Currency,
+                     Status = dataDDMAST.Status,
+                     OpenDat6 = dataDDMAST.OpenDat6,
+                     OpenDat7 = dataDDMAST.OpenDat7,
+                     Ybal = dataDDMAST.Ybal
+                  });
                }
-
-               // proses get list of rekening
-               List<DataRekeningResponse>? listRekening = new List<DataRekeningResponse>();
-               Task? taskGetRekeningSA = Task.Run(() =>
-               {
-                  // jika data sudah ketemu di ddmast
-                  if (findDDMAST.Count > 0)
-                  {
-                     foreach (var dataDDMAST in findDDMAST)
-                     {
-                        listRekening.Add(new DataRekeningResponse()
-                        {
-                           AccountNumber = dataDDMAST.AccountNumber,
-                           AccountType = dataDDMAST.AccountType,
-                           CifNum = dataDDMAST.CifNum,
-                           Cbal = dataDDMAST.Cbal,
-                           Hold = dataDDMAST.Hold,
-                           ShortName = dataDDMAST.ShortName,
-                           ProductType = dataDDMAST.ProductType,
-                           Currency = dataDDMAST.Currency,
-                           Status = dataDDMAST.Status,
-                           OpenDat6 = dataDDMAST.OpenDat6,
-                           OpenDat7 = dataDDMAST.OpenDat7,
-                           Ybal = dataDDMAST.Ybal
-                        });
-                     }
-                     return;
-                  }
-
-                  // jika adanya di DDMEMO
-                  foreach (var dataDDMEMO in findDDMEMO)
-                  {
-                     listRekening.Add(new DataRekeningResponse()
-                     {
-                        AccountNumber = dataDDMEMO.AccountNumber,
-                        AccountType = dataDDMEMO.AccountType,
-                        CifNum = dataDDMEMO.CifNum,
-                        Cbal = dataDDMEMO.Cbal,
-                        Hold = dataDDMEMO.Hold,
-                        ShortName = dataDDMEMO.ShortName,
-                        ProductType = dataDDMEMO.ProductType,
-                        Currency = dataDDMEMO.Currency,
-                        Status = dataDDMEMO.Status,
-                        OpenDat6 = dataDDMEMO.OpenDat6,
-                        OpenDat7 = dataDDMEMO.OpenDat7,
-                        Ybal = dataDDMEMO.Ybal
-                     });
-                  }
-               });
-
-               Task? taskGetRekeningCA = Task.Run(() =>
-               {
-                  // jika sudah ada di table cdmast
-                  if (findCDMAST.Count > 0)
-                  {
-                     foreach (var dataCDMAST in findCDMAST)
-                     {
-                        // add to list of rekening
-                        listRekening.Add(new DataRekeningResponse()
-                        {
-                           AccountNumber = dataCDMAST.AccountNumber,
-                           AccountType = dataCDMAST.AccountType,
-                           CifNum = dataCDMAST.CifNum,
-                           Cbal = dataCDMAST.Cbal,
-                           Hold = dataCDMAST.Hold,
-                           ShortName = dataCDMAST.ShortName,
-                           ProductType = dataCDMAST.ProductType,
-                           Currency = dataCDMAST.Currency,
-                           Status = dataCDMAST.Status,
-                           OpenDat6 = dataCDMAST.OpenDat6,
-                           OpenDat7 = dataCDMAST.OpenDat7,
-                           Ybal = dataCDMAST.Ybal
-                        });
-                     }
-                     return;
-                  }
-
-                  foreach(var dataCDMEMO in findCDMEMO)
-                  {
-                     listRekening.Add(new DataRekeningResponse()
-                     {
-                        AccountNumber = dataCDMEMO.AccountNumber,
-                        AccountType = dataCDMEMO.AccountType,
-                        CifNum = dataCDMEMO.CifNum,
-                        Cbal = dataCDMEMO.Cbal,
-                        Hold = dataCDMEMO.Hold,
-                        ShortName = dataCDMEMO.ShortName,
-                        ProductType = dataCDMEMO.ProductType,
-                        Currency = dataCDMEMO.Currency,
-                        Status = dataCDMEMO.Status,
-                        OpenDat6 = dataCDMEMO.OpenDat6,
-                        OpenDat7 = dataCDMEMO.OpenDat7,
-                        Ybal = dataCDMEMO.Ybal
-                     });
-                  }
-               });
-
-               // wait all task done
-               Task.WaitAll(taskGetRekeningSA, taskGetRekeningCA);
-
-               // create response
-               var response = new DataCifResponse()
-               {
-                  CifNum = findCFMAST.CifNum,
-                  BranchNo = findCFMAST.BranchNo,
-                  NamaCetakan = findCFMAST?.NamaCetakan,
-                  Negara = findCFMAST?.Negara,
-                  FederalWhCode = findCFMAST?.FederalWhCode,
-                  NoId = findCFMAST?.NoId,
-                  Npwp = findCFMAST?.Npwp,
-                  NamaSesuaiId = findCFMAST?.NamaSesuaiId,
-                  NamaLengkap = findCFMAST?.NamaLengkap,
-                  JenisKelamin = findCFMAST?.JenisKelamin,
-                  Kewarganegaraan = findCFMAST?.Kewarganegaraan,
-                  TempatLahir = findCFMAST?.TempatLahir,
-                  TanggalLahir = findCFMAST?.TanggalLahir,
-                  JenisKartuIdentitas = findCFMAST?.JenisKartuIdentitas,
-                  Agama = findCFMAST?.Agama,
-                  AlamatId1 = findCFMAST?.AlamatId1,
-                  KelurahanId = findCFMAST?.KelurahanId,
-                  KecamatanId = findCFMAST?.KecamatanId,
-                  KotaId = findCFMAST?.KotaId,
-                  PropinsiId = findCFMAST?.PropinsiId,
-                  NoHp = findCFMAST?.NoHp,
-                  Rekening = (listRekening.Count == 0) ? null : listRekening
-               };
-
-               tr.Complete();
-               return response;
             }
-            catch (Exception err)
+            else
             {
-               tr.Dispose();
-               throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+               // jika adanya di DDMEMO
+               foreach (var dataDDMEMO in findDDMEMO.Result)
+               {
+                  listRekening.Add(new DataRekeningResponse()
+                  {
+                     AccountNumber = dataDDMEMO.AccountNumber,
+                     AccountType = dataDDMEMO.AccountType,
+                     CifNum = dataDDMEMO.CifNum,
+                     Cbal = dataDDMEMO.Cbal,
+                     Hold = dataDDMEMO.Hold,
+                     ShortName = dataDDMEMO.ShortName,
+                     ProductType = dataDDMEMO.ProductType,
+                     Currency = dataDDMEMO.Currency,
+                     Status = dataDDMEMO.Status,
+                     OpenDat6 = dataDDMEMO.OpenDat6,
+                     OpenDat7 = dataDDMEMO.OpenDat7,
+                     Ybal = dataDDMEMO.Ybal
+                  });
+               }
             }
+
+            // jika sudah ada di table cdmast
+            if (findCDMAST?.Result?.Count > 0)
+            {
+               foreach (var dataCDMAST in findCDMAST.Result)
+               {
+                  // add to list of rekening
+                  listRekening.Add(new DataRekeningResponse()
+                  {
+                     AccountNumber = dataCDMAST.AccountNumber,
+                     AccountType = dataCDMAST.AccountType,
+                     CifNum = dataCDMAST.CifNum,
+                     Cbal = dataCDMAST.Cbal,
+                     Hold = dataCDMAST.Hold,
+                     ShortName = dataCDMAST.ShortName,
+                     ProductType = dataCDMAST.ProductType,
+                     Currency = dataCDMAST.Currency,
+                     Status = dataCDMAST.Status,
+                     OpenDat6 = dataCDMAST.OpenDat6,
+                     OpenDat7 = dataCDMAST.OpenDat7,
+                     Ybal = dataCDMAST.Ybal
+                  });
+               }
+            }
+            else
+            {
+               foreach (var dataCDMEMO in findCDMEMO.Result)
+               {
+                  listRekening.Add(new DataRekeningResponse()
+                  {
+                     AccountNumber = dataCDMEMO.AccountNumber,
+                     AccountType = dataCDMEMO.AccountType,
+                     CifNum = dataCDMEMO.CifNum,
+                     Cbal = dataCDMEMO.Cbal,
+                     Hold = dataCDMEMO.Hold,
+                     ShortName = dataCDMEMO.ShortName,
+                     ProductType = dataCDMEMO.ProductType,
+                     Currency = dataCDMEMO.Currency,
+                     Status = dataCDMEMO.Status,
+                     OpenDat6 = dataCDMEMO.OpenDat6,
+                     OpenDat7 = dataCDMEMO.OpenDat7,
+                     Ybal = dataCDMEMO.Ybal
+                  });
+               }
+            }
+
+            // create response
+            return new DataCifResponse()
+            {
+               CifNum = findCFMAST.Result.CifNum,
+               BranchNo = findCFMAST.Result.BranchNo,
+               NamaCetakan = findCFMAST?.Result.NamaCetakan,
+               Negara = findCFMAST?.Result.Negara,
+               FederalWhCode = findCFMAST?.Result.FederalWhCode,
+               NoId = findCFMAST?.Result.NoId,
+               Npwp = findCFMAST?.Result.Npwp,
+               NamaSesuaiId = findCFMAST?.Result.NamaSesuaiId,
+               NamaLengkap = findCFMAST?.Result.NamaLengkap,
+               JenisKelamin = findCFMAST?.Result.JenisKelamin,
+               Kewarganegaraan = findCFMAST?.Result.Kewarganegaraan,
+               TempatLahir = findCFMAST?.Result.TempatLahir,
+               TanggalLahir = findCFMAST?.Result.TanggalLahir,
+               JenisKartuIdentitas = findCFMAST?.Result.JenisKartuIdentitas,
+               Agama = findCFMAST?.Result.Agama,
+               AlamatId1 = findCFMAST?.Result.AlamatId1,
+               KelurahanId = findCFMAST?.Result.KelurahanId,
+               KecamatanId = findCFMAST?.Result.KecamatanId,
+               KotaId = findCFMAST?.Result.KotaId,
+               PropinsiId = findCFMAST?.Result.PropinsiId,
+               NoHp = findCFMAST?.Result.NoHp,
+               Rekening = (listRekening.Count == 0) ? null : listRekening
+            };
+         }
+         catch (Exception err)
+         {
+            throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
          }
       }
    }
