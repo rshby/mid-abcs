@@ -1,4 +1,5 @@
 using accountnumber_inquiry.Data;
+using accountnumber_inquiry.Repositories;
 using accountnumber_inquiry.Resolver;
 using accountnumber_inquiry.Services;
 using Inquiry.Repositories;
@@ -15,6 +16,10 @@ builder.Services.AddTransient<ABCS_M_CDMAST_Repo>();
 builder.Services.AddTransient<ABCS_M_CDMEMO_Repo>();
 builder.Services.AddTransient<ABCS_M_DDMAST_Repo>();
 builder.Services.AddTransient<ABCS_M_DDMEMO_Repo>();
+builder.Services.AddTransient<ABCS_M_GLMAST_Repo>();
+builder.Services.AddTransient<ABCS_M_GLMEMO_Repo>();
+builder.Services.AddTransient<ABCS_M_LNMAST_Repo>();
+builder.Services.AddTransient<ABCS_M_LNMEMO_Repo>();
 
 // register Service Layer
 builder.Services.AddTransient<IAccountNumberInquiryService, AccountNumberInquiryService>();

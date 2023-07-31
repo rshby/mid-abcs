@@ -1,4 +1,5 @@
 ﻿using accountnumber_inquiry.Models.DTO;
+using accountnumber_inquiry.Repositories;
 using Inquiry.Repositories;
 using System.Diagnostics;
 
@@ -11,14 +12,22 @@ namespace accountnumber_inquiry.Services
       private readonly ABCS_M_CDMEMO_Repo _cdmemoRepo;
       private readonly ABCS_M_DDMAST_Repo _ddmastRepo;
       private readonly ABCS_M_DDMEMO_Repo _ddmemoRepo;
+      private readonly ABCS_M_GLMAST_Repo _glmastRepo;
+      private readonly ABCS_M_GLMEMO_Repo _glmemoRepo;
+      private readonly ABCS_M_LNMAST_Repo _lnmastRepo;
+      private readonly ABCS_M_LNMEMO_Repo _lnmemoRepo;
 
       // create constructor
-      public AccountNumberInquiryService(ABCS_M_CDMAST_Repo cdmastRepo, ABCS_M_CDMEMO_Repo cdmemoRepo, ABCS_M_DDMAST_Repo ddmastRepo, ABCS_M_DDMEMO_Repo ddmemoRepo)
+      public AccountNumberInquiryService(ABCS_M_CDMAST_Repo cdmastRepo, ABCS_M_CDMEMO_Repo cdmemoRepo, ABCS_M_DDMAST_Repo ddmastRepo, ABCS_M_DDMEMO_Repo ddmemoRepo, ABCS_M_GLMAST_Repo glmastRepo, ABCS_M_GLMEMO_Repo glmemoRepo, ABCS_M_LNMAST_Repo lnmastRepo, ABCS_M_LNMEMO_Repo lnmemoRepo)
       {
          this._cdmastRepo = cdmastRepo;
          this._cdmemoRepo = cdmemoRepo;
          this._ddmastRepo = ddmastRepo;
          this._ddmemoRepo = ddmemoRepo;
+         this._glmastRepo = glmastRepo;
+         this._glmemoRepo = glmemoRepo;
+         this._lnmastRepo = lnmastRepo;
+         this._lnmemoRepo = lnmemoRepo;
       }
 
       // method to inquiry rekening by ACCOUNTNUMBER
@@ -30,9 +39,13 @@ namespace accountnumber_inquiry.Services
             var findCDMEMO = _cdmemoRepo.GetByAccountNumberAsync(inputAccountNumber);
             var findDDMAST = _ddmastRepo.GetByAccountNumberAsync(inputAccountNumber);
             var findDDMEMO = _ddmemoRepo.GetByAccountNumberAsync(inputAccountNumber);
+            var findGLMAST = _glmastRepo.GetByAccountNumberAsync(inputAccountNumber);
+            var findGLMEMO = _glmemoRepo.GetByAccountNumberAsync(inputAccountNumber);
+            var findLNMAST = _lnmastRepo.GetByAccountNumberAsync(inputAccountNumber);
+            var findLNMEMO = _lnmemoRepo.GetByAccountNumberAsync(inputAccountNumber);
 
             // wait all task done
-            Task.WaitAll(findCDMAST, findCDMEMO, findDDMAST, findDDMEMO);
+            Task.WaitAll(findCDMAST, findCDMEMO, findDDMAST, findDDMEMO, findGLMAST, findGLMEMO, findLNMAST, findLNMEMO);
 
             // ketemu di tabel ABCS_M_CDMAST
             if (findCDMAST.Result != null)
@@ -114,6 +127,74 @@ namespace accountnumber_inquiry.Services
                };
             }
 
+            // jika ketemu di tabel ABCS_M_GLMAST
+            if (findGLMAST.Result != null)
+            {
+               return new InquiryAccountNumberResponse()
+               {
+                  AccountNumber = findGLMAST.Result.AccountNumber,
+                  AccountType = findGLMAST.Result.AccountType,
+                  Cbal = findGLMAST.Result.Cbal,
+                  ShortName = findGLMAST.Result.ShortName,
+                  Currency = findGLMAST.Result.Currency,
+                  Status = findGLMAST.Result.Status,
+                  Ybal = findGLMAST.Result.Ybal
+               };
+            }
+
+            // jika ketemu di tabel ABCS_M_GLMEMO
+            if (findGLMEMO.Result != null)
+            {
+               return new InquiryAccountNumberResponse()
+               {
+                  AccountNumber = findGLMEMO.Result.AccountNumber,
+                  AccountType = findGLMEMO.Result.AccountType,
+                  Cbal = findGLMEMO.Result.Cbal,
+                  ShortName = findGLMEMO.Result.ShortName,
+                  Currency = findGLMEMO.Result.Currency,
+                  Status = findGLMEMO.Result.Status,
+                  Ybal = findGLMEMO.Result.Ybal
+               };
+            }
+
+            // jika ketemu di tabel ABCS_M_LNMAST
+            if (findLNMAST.Result != null)
+            {
+               return new InquiryAccountNumberResponse()
+               {
+                  AccountNumber = findLNMAST.Result.AccountNumber,
+                  AccountType = findLNMAST.Result.AccountType,
+                  CifNum = findLNMAST.Result.CifNum,
+                  Cbal = findLNMAST.Result.Cbal,
+                  Hold = findLNMAST.Result.Hold,
+                  ShortName = findLNMAST.Result.ShortName,
+                  ProductType = findLNMAST.Result.ProductType,
+                  Currency = findLNMAST.Result.Currency,
+                  Status = findLNMAST.Result.Status,
+                  OpenDat6 = findLNMAST.Result.OpenDat6,
+                  OpenDat7 = findLNMAST.Result.OpenDat7
+               };
+            }
+
+            // jika ketemu di tabel ABCS_M_LNMEMO
+            if (findLNMEMO.Result != null)
+            {
+               return new InquiryAccountNumberResponse()
+               {
+                  AccountNumber = findLNMEMO.Result.AccountNumber,
+                  AccountType = findLNMEMO.Result.AccountType,
+                  CifNum = findLNMEMO.Result.CifNum,
+                  Cbal = findLNMEMO.Result.Cbal,
+                  Hold = findLNMEMO.Result.Hold,
+                  ShortName = findLNMEMO.Result.ShortName,
+                  ProductType = findLNMEMO.Result.ProductType,
+                  Currency = findLNMEMO.Result.Currency,
+                  Status = findLNMEMO.Result.Status,
+                  OpenDat6 = findLNMEMO.Result.OpenDat6,
+                  OpenDat7 = findLNMEMO.Result.OpenDat7
+               };
+            }
+
             // not found
             return null;
          }
@@ -132,9 +213,11 @@ namespace accountnumber_inquiry.Services
             var findCDMAST = _cdmastRepo.GetByCifNumAsync(inputCifNum);
             var findCDMEMO = _cdmemoRepo.GetByCifNumAsync(inputCifNum);
             var findDDMEMO = _ddmemoRepo.GetByCifNumAsync(inputCifNum);
+            var findLNMAST = _lnmastRepo.GetByCifNumAsync(inputCifNum);
+            var findLNMEMO = _lnmemoRepo.GetByCifNumAsync(inputCifNum);
 
             // wait all task done
-            Task.WaitAll(findDDMAST, findDDMEMO, findCDMAST, findDDMEMO);
+            Task.WaitAll(findDDMAST, findDDMEMO, findCDMAST, findDDMEMO, findLNMAST, findLNMEMO);
 
             List<InquiryAccountNumberResponse>? listRekening = new List<InquiryAccountNumberResponse>();
 
@@ -223,6 +306,50 @@ namespace accountnumber_inquiry.Services
                      OpenDat6 = dataDDMEMO.OpenDat6,
                      OpenDat7 = dataDDMEMO.OpenDat7,
                      Ybal = dataDDMEMO.Ybal
+                  });
+               }
+            }
+
+            // jika data ketemu di lnmast
+            if (findLNMAST?.Result?.Count > 0)
+            {
+               foreach (var dataLNMAST in findLNMAST.Result)
+               {
+                  listRekening.Add(new InquiryAccountNumberResponse()
+                  {
+                     AccountNumber = dataLNMAST.AccountNumber,
+                     AccountType = dataLNMAST.AccountType,
+                     CifNum = dataLNMAST.CifNum,
+                     Cbal = dataLNMAST.Cbal,
+                     Hold = dataLNMAST.Hold,
+                     ShortName = dataLNMAST.ShortName,
+                     ProductType = dataLNMAST.ProductType,
+                     Currency = dataLNMAST.Currency,
+                     Status = dataLNMAST.Status,
+                     OpenDat6 = dataLNMAST.OpenDat6,
+                     OpenDat7 = dataLNMAST.OpenDat7
+                  });
+               }
+            }
+
+            // jika ketemu data di lnmemo
+            if (findLNMEMO?.Result?.Count > 0)
+            {
+               foreach(var dataLNMEMO in findLNMEMO.Result)
+               {
+                  listRekening.Add(new InquiryAccountNumberResponse()
+                  {
+                     AccountNumber = dataLNMEMO.AccountNumber,
+                     AccountType = dataLNMEMO.AccountType,
+                     CifNum = dataLNMEMO.CifNum,
+                     Cbal = dataLNMEMO.Cbal,
+                     Hold = dataLNMEMO.Hold,
+                     ShortName = dataLNMEMO.ShortName,
+                     ProductType = dataLNMEMO.ProductType,
+                     Currency = dataLNMEMO.Currency,
+                     Status = dataLNMEMO.Status,
+                     OpenDat6 = dataLNMEMO.OpenDat6,
+                     OpenDat7 = dataLNMEMO.OpenDat7
                   });
                }
             }

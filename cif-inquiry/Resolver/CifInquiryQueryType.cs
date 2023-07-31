@@ -6,7 +6,7 @@ namespace cif_inquiry.Resolver
 {
    public class CifInquiryQueryType
    {
-      [GraphQLName("cif_inquiry")]
+      [GraphQLName("mbase_inq_cif")]
       public async Task<ABCS_M_CFMAST?> GetByCifNumAsync([Service] ICifInquiryService cifInquiryService, [Required] string? cifnum) => await cifInquiryService.GetByCifNumAsync(cifnum);
    }
 }

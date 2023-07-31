@@ -6,10 +6,10 @@ namespace accountnumber_inquiry.Resolver
 {
    public class AccountNumberInquiryQueryType
    {
-      [GraphQLName("accountnumber_inquiry")]
+      [GraphQLName("abcs_inq_accnum")]
       public async Task<InquiryAccountNumberResponse?> InquiryByAccountNumberAsync([Service] IAccountNumberInquiryService accNumService, [Required] string? accountnumber) => await accNumService.InquiryByAccountNumberAsync(accountnumber);
 
-      [GraphQLName("inquiry_by_cif")]
+      [GraphQLName("abcs_inq_acc_cif")]
       public async Task<List<InquiryAccountNumberResponse>?> InquiryByCifAsync([Service] IAccountNumberInquiryService accNumService, [Required] string? cifnum) => await accNumService.InquiryByCifNumAsync(cifnum);
    }
 }
