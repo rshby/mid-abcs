@@ -124,11 +124,110 @@ namespace accountnumber_inquiry.Services
       }
 
       // method to inquiry rekening by CIFNUM
-      public Task<List<InquiryAccountNumberResponse>?> InquiryByCifNumAsync(string? inputCifNum)
+      public async Task<List<InquiryAccountNumberResponse>?> InquiryByCifNumAsync(string? inputCifNum)
       {
          try
          {
-            throw new NotImplementedException();
+            var findDDMAST = _ddmastRepo.GetByCifNumAsync(inputCifNum);
+            var findCDMAST = _cdmastRepo.GetByCifNumAsync(inputCifNum);
+            var findCDMEMO = _cdmemoRepo.GetByCifNumAsync(inputCifNum);
+            var findDDMEMO = _ddmemoRepo.GetByCifNumAsync(inputCifNum);
+
+            // wait all task done
+            Task.WaitAll(findDDMAST, findDDMEMO, findCDMAST, findDDMEMO);
+
+            List<InquiryAccountNumberResponse>? listRekening = new List<InquiryAccountNumberResponse>();
+
+            // jika sudah ada di table cdmast
+            if (findCDMAST?.Result?.Count > 0)
+            {
+               foreach (var dataCDMAST in findCDMAST.Result)
+               {
+                  listRekening.Add(new InquiryAccountNumberResponse()
+                  {
+                     AccountNumber = dataCDMAST.AccountNumber,
+                     AccountType = dataCDMAST.AccountType,
+                     CifNum = dataCDMAST.CifNum,
+                     Cbal = dataCDMAST.Cbal,
+                     Hold = dataCDMAST.Hold,
+                     ShortName = dataCDMAST.ShortName,
+                     ProductType = dataCDMAST.ProductType,
+                     Currency = dataCDMAST.Currency,
+                     Status = dataCDMAST.Status,
+                     OpenDat6 = dataCDMAST.OpenDat6,
+                     OpenDat7 = dataCDMAST.OpenDat7,
+                     Ybal = dataCDMAST.Ybal
+                  });
+               }
+            }
+            else
+            {
+               foreach (var dataCDMEMO in findCDMEMO.Result)
+               {
+                  listRekening.Add(new InquiryAccountNumberResponse()
+                  {
+                     AccountNumber = dataCDMEMO.AccountNumber,
+                     AccountType = dataCDMEMO.AccountType,
+                     CifNum = dataCDMEMO.CifNum,
+                     Cbal = dataCDMEMO.Cbal,
+                     Hold = dataCDMEMO.Hold,
+                     ShortName = dataCDMEMO.ShortName,
+                     ProductType = dataCDMEMO.ProductType,
+                     Currency = dataCDMEMO.Currency,
+                     Status = dataCDMEMO.Status,
+                     OpenDat6 = dataCDMEMO.OpenDat6,
+                     OpenDat7 = dataCDMEMO.OpenDat7,
+                     Ybal = dataCDMEMO.Ybal
+                  });
+               }
+            }
+
+            // jika data sudah ketemu di ddmast
+            if (findDDMAST?.Result?.Count > 0)
+            {
+               foreach (var dataDDMAST in findDDMAST.Result)
+               {
+                  listRekening.Add(new InquiryAccountNumberResponse()
+                  {
+                     AccountNumber = dataDDMAST.AccountNumber,
+                     AccountType = dataDDMAST.AccountType,
+                     CifNum = dataDDMAST.CifNum,
+                     Cbal = dataDDMAST.Cbal,
+                     Hold = dataDDMAST.Hold,
+                     ShortName = dataDDMAST.ShortName,
+                     ProductType = dataDDMAST.ProductType,
+                     Currency = dataDDMAST.Currency,
+                     Status = dataDDMAST.Status,
+                     OpenDat6 = dataDDMAST.OpenDat6,
+                     OpenDat7 = dataDDMAST.OpenDat7,
+                     Ybal = dataDDMAST.Ybal
+                  });
+               }
+            }
+            else
+            {
+               // jika adanya di DDMEMO
+               foreach (var dataDDMEMO in findDDMEMO.Result)
+               {
+                  listRekening.Add(new InquiryAccountNumberResponse()
+                  {
+                     AccountNumber = dataDDMEMO.AccountNumber,
+                     AccountType = dataDDMEMO.AccountType,
+                     CifNum = dataDDMEMO.CifNum,
+                     Cbal = dataDDMEMO.Cbal,
+                     Hold = dataDDMEMO.Hold,
+                     ShortName = dataDDMEMO.ShortName,
+                     ProductType = dataDDMEMO.ProductType,
+                     Currency = dataDDMEMO.Currency,
+                     Status = dataDDMEMO.Status,
+                     OpenDat6 = dataDDMEMO.OpenDat6,
+                     OpenDat7 = dataDDMEMO.OpenDat7,
+                     Ybal = dataDDMEMO.Ybal
+                  });
+               }
+            }
+
+            return (listRekening.Count == 0) ? null : listRekening;
          }
          catch (Exception err)
          {
