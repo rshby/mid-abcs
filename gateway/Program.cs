@@ -3,11 +3,12 @@ using gateway;
 var builder = WebApplication.CreateBuilder(args);
 
 // register node service
-builder.Services.AddHttpClient(ListSchema.SaInquiry, x => x.BaseAddress = new Uri("http://localhost:1000/graphql"));
-builder.Services.AddHttpClient(ListSchema.Inquiry, x => x.BaseAddress = new Uri("http://localhost:2000/graphql"));
+builder.Services.AddHttpClient(ListSchema.CifInquiry, c => c.BaseAddress = new Uri("http://localhost:2000/graphql"));
+builder.Services.AddHttpClient(ListSchema.Inquiry, x => x.BaseAddress = new Uri("http://localhost:2001/graphql"));
+builder.Services.AddHttpClient(ListSchema.SaInquiry, x => x.BaseAddress = new Uri("http://localhost:2002/graphql"));
 
 // register GraphQL Server
-builder.Services.AddGraphQLServer().AddRemoteSchema(ListSchema.SaInquiry).AddRemoteSchema(ListSchema.Inquiry);
+builder.Services.AddGraphQLServer().AddRemoteSchema(ListSchema.SaInquiry).AddRemoteSchema(ListSchema.Inquiry).AddRemoteSchema(ListSchema.CifInquiry);
 // Add services to the container.
 
 builder.Services.AddControllers();

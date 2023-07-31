@@ -4,5 +4,6 @@
    {
       public const string? SaInquiry = "sa_inquiry";
       public const string? Inquiry = "inquiry";
+      public const string? CifInquiry = "cif_inquiry";
    }
 }

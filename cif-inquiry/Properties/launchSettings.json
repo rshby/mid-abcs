@@ -4,17 +4,17 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:42940",
+      "applicationUrl": "http://localhost:39514",
       "sslPort": 0
     }
   },
   "profiles": {
-    "Inquiry": {
+    "cif_inquiry": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:2001",
+      "applicationUrl": "http://localhost:2000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
