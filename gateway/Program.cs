@@ -4,9 +4,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // register node service
 builder.Services.AddHttpClient(ListSchema.CifInquiry, c => c.BaseAddress = new Uri("http://localhost:2000/graphql"));
-//builder.Services.AddHttpClient(ListSchema.Inquiry, x => x.BaseAddress = new Uri("http://localhost:2001/graphql"));
-//builder.Services.AddHttpClient(ListSchema.SaInquiry, x => x.BaseAddress = new Uri("http://localhost:2002/graphql"));
-builder.Services.AddHttpClient(ListSchema.AccountNumberInquiry, x => x.BaseAddress = new Uri("http://localhost:2003/graphql"));
+//builder.Services.AddHttpClient(ListSchema.Inquiry, x => x.BaseAddress = new Uri("http://localhost:2002/graphql"));
+//builder.Services.AddHttpClient(ListSchema.SaInquiry, x => x.BaseAddress = new Uri("http://localhost:2003/graphql"));
+builder.Services.AddHttpClient(ListSchema.AccountNumberInquiry, x => x.BaseAddress = new Uri("http://localhost:2001/graphql"));
 
 // register GraphQL Server
 builder.Services.AddGraphQLServer()
