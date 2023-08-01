@@ -243,7 +243,9 @@ namespace accountnumber_inquiry.Services
                   });
                }
             }
-            else
+
+            // jika ada data di tabel cdmemo
+            if (findCDMEMO?.Result?.Count > 0)
             {
                foreach (var dataCDMEMO in findCDMEMO.Result)
                {
@@ -287,9 +289,10 @@ namespace accountnumber_inquiry.Services
                   });
                }
             }
-            else
+            
+            // jika ada data di tabel ddemmo
+            if (findDDMEMO?.Result?.Count > 0)
             {
-               // jika adanya di DDMEMO
                foreach (var dataDDMEMO in findDDMEMO.Result)
                {
                   listRekening.Add(new InquiryAccountNumberResponse()
