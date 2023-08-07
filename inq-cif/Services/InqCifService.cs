@@ -15,11 +15,11 @@ namespace inq_cif.Services
       }
 
       // method to get data ABCS_M_CFMAST by cifnum
-      public Task<ABCS_M_CFMAST?> GetByCifNumAsync(string? inputCifNum)
+      public async Task<ABCS_M_CFMAST?> GetByCifNumAsync(string? inputCifNum)
       {
          try
          {
-
+            return await _cfmastRepo.GetByCifNumAsync(inputCifNum);
          }
          catch(Exception err)
          {

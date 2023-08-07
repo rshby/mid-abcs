@@ -1,4 +1,19 @@
+using inq_cif.Repositories;
+using inq_cif.Resolver;
+using inq_cif.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// register DbContext
+
+// register Repository Layer
+builder.Services.AddTransient<ABCS_M_CFMAST_Repository>();
+
+// register Service Layer
+builder.Services.AddTransient<InterfaceInqCifService, InqCifService>();
+
+// register GraphQL Server
+builder.Services.AddGraphQLServer().AddQueryType<InqCifQueryType>();
 
 // Add services to the container.
 
@@ -21,5 +36,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// add GraphQL Endpoint
+app.MapGraphQL();
 
 app.Run();
