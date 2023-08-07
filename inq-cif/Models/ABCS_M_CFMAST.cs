@@ -606,5 +606,245 @@ namespace inq_cif.Models
       [DefaultValue(null)]
       [GraphQLName("tanggal_akta_perubahan")]
       public string? TanggalAktaPerubahan { get; set; }
+
+      [Column("ALAMAT_KANTOR_1", Order = 101)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("alamat_kantor_1")]
+      public string? AlamatKantor1 { get; set; }
+
+      [Column("ALAMAT_KANTOR_2", Order = 102)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("alamat_kantor_2")]
+      public string? AlamatKantor2 { get; set; }
+
+      [Column("RT_KANTOR", Order = 103)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("rt_kantor")]
+      public string? RtKantor { get; set; }
+
+      [Column("RW_KANTOR", Order = 104)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("rw_kantor")]
+      public string? RwKantor { get; set; }
+
+      [Column("KODE_POS", Order = 105)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("kode_pos")]
+      public string? KodePos { get; set; }
+
+      [Column("KELURAHAN", Order = 106)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("kelurahan")]
+      public string? Kelurahan { get; set; }
+
+      [Column("KECAMATAN", Order = 107)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("kecamatan")]
+      public string? Kecamatan { get; set; }
+
+      [Column("KOTA", Order = 108)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("kota")]
+      public string? Kota { get; set; }
+
+      [Column("PROPINSI", Order = 109)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("propinsi")]
+      public string? Propinsi { get; set; }
+
+      [Column("TELP", Order = 110)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("telp")]
+      public string? Telp { get; set; }
+
+      [Column("FACS", Order = 111)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("facs")]
+      public string? Facs { get; set; }
+
+      [Column("NAMA_PENGURUS_1", Order = 112)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("nama_pengurus_1")]
+      public string? NamaPengurus1 { get; set; }
+
+      [Column("JABATAN_PENGURUS_1", Order = 113)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("jabatan_pengurus_1")]
+      public string? JabatanPengurus1 { get; set; }
+
+      [Column("TELP_PENGURUS_1", Order = 114)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("telp_pengurus_1")]
+      public string? TelpPengurus1 { get; set; }
+
+      [Column("EMAIL_PENGURUS_1", Order = 115)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("email_pengurus_1")]
+      public string? EmailPengurus1 { get; set; }
+
+      [Column("NAMA_PENGURUS_2", Order = 116)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("nama_pengurus_2")]
+      public string? NamaPengurus2 { get; set; }
+
+      [Column("JABATAN_PENGURUS_2", Order = 117)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("jabatan_pengurus_2")]
+      public string? JabatanPengurus2 { get; set; }
+
+      [Column("TELP_PENGURUS_2", Order = 118)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("telp_pengurus_2")]
+      public string? TelpPengurus2 { get; set; }
+
+      [Column("EMAIL_PENGURUS_2", Order = 119)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("email_pengurus_2")]
+      public string? EmailPengurus2 { get; set; }
+
+      [Column("TUJUAN_MEMBUKA_REKENING", Order = 120)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("tujuan_membuka_rekening")]
+      public string? TujuanMembukaRekening { get; set; }
+
+      [Column("OMZET_PERBULAN", Order = 121)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("omzet_perbulan")]
+      public string? OmzetPerbulan { get; set; }
+
+      [Column("NAMA_PENGURUS_3", Order = 122)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("nama_pengurus_3")]
+      public string? NamaPengurus3 { get; set; }
+
+      [Column("JABATAN_PENGURUS_3", Order = 123)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("jabatan_pengurus_3")]
+      public string? JabatanPengurus3 { get; set; }
+
+      [Column("TELP_PENGURUS_3", Order = 124)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("telp_pengurus_3")]
+      public string? TelpPengurus3 { get; set; }
+
+      [Column("EMAIL_PENGURUS_3", Order = 125)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("email_pengurus_3")]
+      public string? EmailPengurus3 { get; set; }
+
+      [Column("KET_JABATAN_PENGURUS_1", Order = 126)]
+      [MaxLength(100)]
+      [DefaultValue(null)]
+      [GraphQLName("ket_jabatan_pengurus_1")]
+      public string? KetJabatanPengurus1 { get; set; }
+
+      [Column("KET_JABATAN_PENGURUS_2", Order = 127)]
+      [MaxLength(100)]
+      [DefaultValue(null)]
+      [GraphQLName("ket_jabatan_pengurus_2")]
+      public string? KetJabatanPengurus2 { get; set; }
+
+      [Column("KET_JABATAN_PENGURUS_3", Order = 128)]
+      [MaxLength(100)]
+      [DefaultValue(null)]
+      [GraphQLName("ket_jabatan_pengurus_3")]
+      public string? KetJabatanPengurus3 { get; set; }
+
+      [Column("PARENT_CIF", Order = 129)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("parent_cif")]
+      public string? ParentCif { get; set; }
+
+      [Column("TYPE_CIF", Order = 130)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("type_cif")]
+      public string? TypeCif { get; set; }
+
+      [Column("FAKTOR_RESIKO", Order = 131)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("faktor_resiko")]
+      public string? FaktorResiko { get; set; }
+
+      [Column("OLDCIFNUM", Order = 132)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("old_cif_num")]
+      public string? OldCifNum { get; set; }
+
+      [Column("OLDBRANCH", Order = 133)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("old_branch")]
+      public string? OldBranch { get; set; }
+
+      [Column("OPEN_DATE", Order = 134)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("open_date")]
+      public string? OpenDate { get; set; }
+
+      [Column("STATUS", Order = 135)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("status")]
+      public string? Status { get; set; }
+
+      [Column("CIFMERGE", Order = 136)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("cif_merge")]
+      public string? CifMerge { get; set; }
+
+      [Column("HOBI", Order = 137)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("hobi")]
+      public string? Hobi { get; set; }
+
+      [Column("KET_HOBI", Order = 138)]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("ket_hobi")]
+      public string? KetHobi { get; set; }
+
+      [Column("EXPOSED_PERSON", Order = 139)]
+      [MaxLength(10)]
+      [DefaultValue(null)]
+      [GraphQLName("exposed_person")]
+      public string? ExposedPerson { get; set; }
+
+      [Column("NAMA_PASANGAN", Order = 140)]
+      [MaxLength(100)]
+      [DefaultValue(null)]
+      [GraphQLName("nama_pasangan")]
+      public string? NamaPasangan { get; set; }
    }
 }
