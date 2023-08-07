@@ -1,6 +1,16 @@
-﻿namespace inq_accont.Models.Entity
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace inq_accont.Models.Entity
 {
+   [Table("ABCS_M_GLMEMO")]
+   [GraphQLName("abcs_m_glmemo")]
    public class ABCS_M_GLMEMO
    {
+      [Required]
+      [Column("ACCOUNTNUMBER")]
+      [MaxLength(50)]
+      [GraphQLName("account_number")]
+      public string? AccountNumber { get; set; }
    }
 }

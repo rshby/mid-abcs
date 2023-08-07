@@ -2,6 +2,9 @@ using inq_accont.Data;
 using inq_accont.Repositories;
 using inq_accont.Resolver;
 using inq_accont.Services.Casa;
+using inq_accont.Services.Deposit;
+using inq_accont.Services.GL;
+using inq_accont.Services.Loan;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +16,18 @@ builder.Services.AddDbContext<InqAccountContext>(x => x.UseSqlServer(connectionS
 // register Repository Layer
 builder.Services.AddTransient<ABCS_M_DDMEMO_Repository>();
 builder.Services.AddTransient<ABCS_M_DDMAST_Repository>();
+builder.Services.AddTransient<ABCS_M_CDMEMO_Repository>();
+builder.Services.AddTransient<ABCS_M_CDMAST_Repository>();
+builder.Services.AddTransient<ABCS_M_GLMEMO_Repository>();
+builder.Services.AddTransient<ABCS_M_GLMAST_Repository>();
+builder.Services.AddTransient<ABCS_M_LNMAST_Repository>();
+builder.Services.AddTransient<ABCS_M_LNMEMO_Repository>();
 
 // register Service Layer
 builder.Services.AddTransient<InterfaceInqCasaService, InqCasaService>();
+builder.Services.AddTransient<InterfaceInqDepositService, InqDepositService>();
+builder.Services.AddTransient<InterfaceInqGlService, InqGlService>();
+builder.Services.AddTransient<InterfaceInqLoanService, InqLoanService>();
 
 // register GraphQL Server
 builder.Services.AddGraphQLServer().AddQueryType<InqAccountQueryType>();
