@@ -54,12 +54,38 @@ namespace inq_accont.Repositories
          }
       }
 
+      // method to get data rekening saving by cifnum
+      public async Task<List<ABCS_M_DDMAST>?> GetSavingByCifNumAsync(string? inputCifNum)
+      {
+         try
+         {
+            return await _db.ABCS_M_DDMAST.AsQueryable().Where(x => x.ProductType.Equals("S") && x.CifNum.Equals(inputCifNum)).ToListAsync<ABCS_M_DDMAST>();
+         }
+         catch (Exception err)
+         {
+            throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+         }
+      }
+
       // method get data rekening saving by accountnumber
       public async Task<ABCS_M_DDMAST?> GetSavingByAccountNumber(string? inputAccountNumber)
       {
          try
          {
             return await _db.ABCS_M_DDMAST.AsQueryable().FirstOrDefaultAsync<ABCS_M_DDMAST>(x => x.AccountType.Equals("S") && x.AccountNumber.Equals(inputAccountNumber));
+         }
+         catch (Exception err)
+         {
+            throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+         }
+      }
+
+      // method get data rekening saving by cifnum and accountnumber
+      public async Task<ABCS_M_DDMAST?> GetSavingByCifNumAndAccountNumberAsync(string? inputCifNum, string? inputAccountNumber)
+      {
+         try
+         {
+            return await _db.ABCS_M_DDMAST.AsQueryable().FirstOrDefaultAsync<ABCS_M_DDMAST>(x => x.ProductType.Equals("S") && x.CifNum.Equals(inputCifNum) && x.AccountNumber.Equals(inputAccountNumber));
          }
          catch (Exception err)
          {

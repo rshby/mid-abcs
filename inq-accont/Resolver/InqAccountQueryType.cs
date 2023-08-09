@@ -32,6 +32,28 @@ namespace inq_accont.Resolver
          throw new GraphQLException(new ErrorBuilder().SetMessage("parameter required").Build());
       }
 
+      // handler get data rekening saving
+      [GraphQLName("abcs_inq_saving")]
+      public async Task<List<CaSaResponse>?> GetSavingAsync([Service] InterfaceInqCasaService inqCasaService, string? cifnum, string? account_number)
+      {
+         if (cifnum != null && account_number == null)
+         {
+            return await inqCasaService.GetSavingByCifNumAsync(cifnum);
+         }
+
+         if (cifnum == null && account_number != null)
+         {
+            return await inqCasaService.GetSavingByAccountNumber(account_number);
+         }
+
+         if (cifnum != null && account_number != null)
+         {
+            return await inqCasaService.GetSavingByCifNumAndAccountNumber(cifnum, account_number);
+         }
+
+         throw new GraphQLException(new ErrorBuilder().SetMessage("input required").Build());
+      }
+
       // handler get data rekening deposit by accountnumber
       [GraphQLName("abcs_inq_deposit")]
       public async Task<List<DepositAccountResponse>?> GetDepositByAccountNumberAsync([Service] InterfaceInqDepositService inqDepositService, [Required] string? account_number) => await inqDepositService.GetByAccountNumberAsync(account_number);

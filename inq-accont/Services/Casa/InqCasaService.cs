@@ -173,9 +173,72 @@ namespace inq_accont.Services.Casa
          }
       }
 
-      public Task<List<CaSaResponse>?> GetSavingByCifNumAsync(string? inputCifNum)
+
+      // method get data rekening saving by cifnum
+      public async Task<List<CaSaResponse>?> GetSavingByCifNumAsync(string? inputCifNum)
       {
-         throw new NotImplementedException();
+         using (var tr = new TransactionScope(TransactionScopeAsyncFlowOption.Suppress))
+         {
+            try
+            {
+               var findSavingDDMEMO = _ddmemoRepo.GetSavingByCifNumAsync(inputCifNum);
+               var findSavingDDMAST = _ddmastRepo.GetSavingByCifNumAsync(inputCifNum);
+
+               List<CaSaResponse>? response = new List<CaSaResponse>();
+               Task.WaitAll(findSavingDDMEMO, findSavingDDMAST);
+
+               // ambil semua data yang ada di tabel ABCS_M_DDMEMO, masukkan ke response
+               foreach (var dataSavingDDMEMO in findSavingDDMEMO.Result)
+               {
+                  response.Add(new CaSaResponse()
+                  {
+                     AccountNumber = dataSavingDDMEMO.AccountNumber,
+                     MinimalBalance = Convert.ToDouble(_ddpar2Repo.GetByProductTypeAsync(dataSavingDDMEMO.ProductType).Result?.MinimumBalance)
+                  });
+               }
+
+               // looping semua data di ABCS_M_DDMAST 
+               if (findSavingDDMAST.Result?.Count > 0)
+               {
+                  foreach (var dataSavingDDMAST in findSavingDDMAST.Result)
+                  {
+                     // jika value property account_number yg ada di data DDMAST tidak ada di data DDMEMO -> masukkan ke response
+                     if (!response.Select(x => x.AccountNumber).Contains(dataSavingDDMAST.AccountNumber))
+                     {
+                        response.Add(new CaSaResponse()
+                        {
+                           AccountNumber = dataSavingDDMAST.AccountNumber,
+                           MinimalBalance = Convert.ToDouble(_ddpar2Repo.GetByProductTypeAsync(dataSavingDDMAST.ProductType).Result?.MinimumBalance)
+                        });
+                     }
+                  }
+               }
+
+               if (response.Count > 0)
+               {
+                  foreach (CaSaResponse? resp in response)
+                  {
+                     // insert ke tabel ABCS_T_TLLOG -> dibikin Task.Run supaya asynchronous
+                  }
+               }
+
+               // jika not found
+               if (response.Count.Equals(0))
+               {
+                  tr.Complete();
+                  return null;
+               }
+
+               // success get data
+               tr.Complete();
+               return response;
+            }
+            catch (Exception err)
+            {
+               tr.Dispose();
+               throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+            }
+         }
       }
 
       // method get data rekening saving by accountnumber
@@ -196,6 +259,7 @@ namespace inq_accont.Services.Casa
                {
                   response.Add(new CaSaResponse()
                   {
+                     AccountNumber = findDDMEMO.Result.AccountNumber,
                      MinimalBalance = Convert.ToDouble(_ddpar2Repo.GetByProductTypeAsync(findDDMEMO.Result.ProductType).Result?.MinimumBalance)
                   });
                }
@@ -206,6 +270,7 @@ namespace inq_accont.Services.Casa
                   {
                      response.Add(new CaSaResponse()
                      {
+                        AccountNumber = findDDMAST.Result.AccountNumber,
                         MinimalBalance = Convert.ToDouble(_ddpar2Repo.GetByProductTypeAsync(findDDMAST.Result.ProductType).Result?.MinimumBalance)
                      });
                   };
@@ -213,7 +278,10 @@ namespace inq_accont.Services.Casa
 
                if (response.Count > 0)
                {
-                  // insert ke tabel ABCS_T_TLLOG
+                  foreach (var dataResp in response)
+                  {
+                     // insert ke tabel ABCS_T_TLLOG
+                  }
                }
 
                if (response.Count == 0) return null;
@@ -228,9 +296,67 @@ namespace inq_accont.Services.Casa
          }
       }
 
-      public Task<List<CaSaResponse>?> GetSavingByCifNumAndAccountNumber(string? inputCifNum, string? inputAccountNumber)
+      // method to get data rekening saving by cifnum and accountnumber
+      public async Task<List<CaSaResponse>?> GetSavingByCifNumAndAccountNumber(string? inputCifNum, string? inputAccountNumber)
       {
-         throw new NotImplementedException();
+         using (var tr = new TransactionScope(TransactionScopeAsyncFlowOption.Suppress))
+         {
+            try
+            {
+               var findDDMEMO = _ddmemoRepo.GetSavingByCifNumAndAccountNumberAsync(inputCifNum, inputAccountNumber);
+               var findDDMAST = _ddmastRepo.GetSavingByCifNumAndAccountNumberAsync(inputCifNum, inputAccountNumber);
+
+               List<CaSaResponse>? response = new List<CaSaResponse>();
+               Task.WaitAll(findDDMEMO, findDDMAST);
+
+               // jika ketemu di tabel DDMEMO
+               if (findDDMEMO.Result != null)
+               {
+                  response.Add(new CaSaResponse()
+                  {
+                     AccountNumber = findDDMEMO.Result.AccountNumber,
+                     MinimalBalance = Convert.ToDouble(_ddpar2Repo.GetByProductTypeAsync(findDDMEMO.Result.ProductType).Result.MinimumBalance)
+                  });
+               }
+               else
+               {
+                  // jika ketemunya di tabel DDMAST
+                  if (findDDMAST.Result != null)
+                  {
+                     response.Add(new CaSaResponse()
+                     {
+                        AccountNumber = findDDMAST.Result.AccountNumber,
+                        MinimalBalance = Convert.ToDouble(_ddpar2Repo.GetByProductTypeAsync(findDDMAST.Result.ProductType).Result.MinimumBalance)
+                     });
+                  }
+               }
+
+               if (response.Count > 0)
+               {
+                  // proses insert ke tabel ABCS_T_TLLOG -> dibikin Task.Run supaya asynchronous
+                  foreach (CaSaResponse dataResp in response)
+                  {
+
+                  }
+               }
+
+               // jika not found
+               if (response.Count.Equals(0))
+               {
+                  tr.Complete();
+                  return null;
+               }
+
+               // success get data
+               tr.Complete();
+               return response;
+            }
+            catch (Exception err)
+            {
+               tr.Dispose();
+               throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+            }
+         }
       }
 
       public Task<List<CaSaResponse>?> GetGiroByCifNum(string? inputCifNum)
