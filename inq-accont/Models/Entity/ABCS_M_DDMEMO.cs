@@ -10,6 +10,12 @@ namespace inq_accont.Models.Entity
       [GraphQLName("account_number")]
       public string? AccountNumber { get; set; }
 
+      [Column("CIFNUM")]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("cif_num")]
+      public string? CifNum { get; set; }
+
       [Column("PRODUCTTYPE")]
       [MaxLength(50)]
       [DefaultValue(null)]

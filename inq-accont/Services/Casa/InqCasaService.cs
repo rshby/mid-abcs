@@ -3,6 +3,7 @@ using inq_accont.Models.Entity;
 using inq_accont.Repositories;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using System.Transactions;
 
 namespace inq_accont.Services.Casa
 {
@@ -57,16 +58,118 @@ namespace inq_accont.Services.Casa
             if (response.Count > 0)
             {
                // insert ke tabel ABCS_T_TLLOG
+
+               // get data journalseq from middleware
+
+               // joirnalseq += 1
+
+               // entity tllog
+
+               // update set journalseq=journalseq+=1
+
             }
 
             // jika not found
             if (response.Count == 0) return null;
-            
+
             return response;
          }
          catch (Exception err)
          {
             throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+         }
+      }
+
+      // method untuk get rekening saving by cif
+      public async Task<List<CaSaResponse>?> GetByCifNumAsync(string? inputCifNum)
+      {
+         using (var tr = new TransactionScope(TransactionScopeAsyncFlowOption.Suppress))
+         {
+            try
+            {
+               var findDDMEMO = _ddmemoRepo.GetByCifNumAsync(inputCifNum);
+               var findDDMAST = _ddmastRepo.GetByCifNumAsync(inputCifNum);
+
+               List<CaSaResponse>? response = new List<CaSaResponse>();
+               Task.WaitAll(findDDMEMO, findDDMAST);
+
+               // jika ketemu di ddmemo
+               if (findDDMEMO.Result?.Count > 0)
+               {
+                  foreach (var dataDDMEMO in findDDMEMO.Result)
+                  {
+                     response.Add(new CaSaResponse()
+                     {
+                        MinimalBalance = Convert.ToDouble(_ddpar2Repo.GetByProductTypeAsync(dataDDMEMO.ProductType).Result?.MinimumBalance)
+                     });
+                  }
+               }
+
+               if (response.Count > 0)
+               {
+                  // insert ke tabel ABCS_T_TLLOG
+               }
+
+               // jika not found
+               if (response.Count == 0) return null;
+
+               return response;
+            }
+            catch (Exception err)
+            {
+               tr.Dispose();
+               throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+            }
+         }
+      }
+
+      // method to get data rekening saving by cif and account_number
+      public async Task<List<CaSaResponse>?> GetByCifNumAndAccountNumberAsync(string? inputCifNum, string? inputAccountNumber)
+      {
+         using (var tr = new TransactionScope(TransactionScopeAsyncFlowOption.Suppress))
+         {
+            try
+            {
+               var findDDMEMO = _ddmemoRepo.GetByCifNumAndAccountNumberAsync(inputCifNum, inputAccountNumber);
+               var findDDMAST = _ddmastRepo.GetByCifNumAndAccountNumber(inputCifNum, inputAccountNumber);
+
+               List<CaSaResponse>? response = new List<CaSaResponse>();
+               Task.WaitAll(findDDMEMO, findDDMAST);
+
+               // jika ketemu di tabel ddmemo
+               if (findDDMEMO.Result != null)
+               {
+                  response.Add(new CaSaResponse()
+                  {
+                     MinimalBalance = Convert.ToDouble(_ddpar2Repo.GetByProductTypeAsync(findDDMEMO.Result.ProductType).Result.MinimumBalance)
+                  });
+               }
+               else
+               {
+                  // jika ada di tabel ddmast
+                  if (findDDMAST.Result != null)
+                  {
+                     response.Add(new CaSaResponse()
+                     {
+                        MinimalBalance = Convert.ToDouble(_ddpar2Repo.GetByProductTypeAsync(findDDMAST.Result.ProductType).Result.MinimumBalance)
+                     });
+                  }
+               }
+
+               if (response.Count > 0)
+               {
+                  // insert ke tabel ABCS_T_TLLOG
+               }
+
+               if (response.Count == 0) return null;
+
+               return response;
+            }
+            catch(Exception err)
+            {
+               tr.Dispose();
+               throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+            }
          }
       }
    }

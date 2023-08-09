@@ -27,5 +27,31 @@ namespace inq_accont.Repositories
             throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
          }
       }
+
+      // method to get data abcs_m_ddmemo by cifnum
+      public async Task<List<ABCS_M_DDMEMO>?> GetByCifNumAsync(string? inputCifNum)
+      {
+         try
+         {
+            return await _db.ABCS_M_DDMEMO.AsQueryable().Where(x => x.CifNum.Equals(inputCifNum)).ToListAsync<ABCS_M_DDMEMO>();
+         }
+         catch (Exception err)
+         {
+            throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+         }
+      }
+
+      // method get data ABCS_M_DDMEMO by cifnum and accountnumber
+      public async Task<ABCS_M_DDMEMO?> GetByCifNumAndAccountNumberAsync(string? inputCifNum, string? inputAccountNumber)
+      {
+         try
+         {
+            return await _db.ABCS_M_DDMEMO.AsQueryable().FirstOrDefaultAsync<ABCS_M_DDMEMO>(x => x.CifNum.Equals(inputCifNum) && x.AccountNumber.Equals(inputAccountNumber));
+         }
+         catch (Exception err)
+         {
+            throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+         }
+      }
    }
 }
