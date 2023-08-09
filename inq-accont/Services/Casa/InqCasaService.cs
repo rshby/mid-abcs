@@ -165,12 +165,87 @@ namespace inq_accont.Services.Casa
 
                return response;
             }
-            catch(Exception err)
+            catch (Exception err)
             {
                tr.Dispose();
                throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
             }
          }
+      }
+
+      public Task<List<CaSaResponse>?> GetSavingByCifNumAsync(string? inputCifNum)
+      {
+         throw new NotImplementedException();
+      }
+
+      // method get data rekening saving by accountnumber
+      public async Task<List<CaSaResponse>?> GetSavingByAccountNumber(string? inputAccountNumber)
+      {
+         using (var tr = new TransactionScope(TransactionScopeAsyncFlowOption.Suppress))
+         {
+            try
+            {
+               var findDDMEMO = _ddmemoRepo.GetSavingByAccountNumber(inputAccountNumber);
+               var findDDMAST = _ddmastRepo.GetSavingByAccountNumber(inputAccountNumber);
+
+               List<CaSaResponse>? response = new List<CaSaResponse>();
+               Task.WaitAll(findDDMEMO, findDDMAST);
+
+               // jika ketemu di tabel ddmemo
+               if (findDDMEMO.Result != null)
+               {
+                  response.Add(new CaSaResponse()
+                  {
+                     MinimalBalance = Convert.ToDouble(_ddpar2Repo.GetByProductTypeAsync(findDDMEMO.Result.ProductType).Result?.MinimumBalance)
+                  });
+               }
+               else
+               {
+                  // jika ada di tabel ABCS_M_DDMAST
+                  if (findDDMAST.Result != null)
+                  {
+                     response.Add(new CaSaResponse()
+                     {
+                        MinimalBalance = Convert.ToDouble(_ddpar2Repo.GetByProductTypeAsync(findDDMAST.Result.ProductType).Result?.MinimumBalance)
+                     });
+                  };
+               }
+
+               if (response.Count > 0)
+               {
+                  // insert ke tabel ABCS_T_TLLOG
+               }
+
+               if (response.Count == 0) return null;
+
+               return response;
+            }
+            catch (Exception err)
+            {
+               tr.Dispose();
+               throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+            }
+         }
+      }
+
+      public Task<List<CaSaResponse>?> GetSavingByCifNumAndAccountNumber(string? inputCifNum, string? inputAccountNumber)
+      {
+         throw new NotImplementedException();
+      }
+
+      public Task<List<CaSaResponse>?> GetGiroByCifNum(string? inputCifNum)
+      {
+         throw new NotImplementedException();
+      }
+
+      public Task<List<CaSaResponse>?> GetGiroByAccountNumber(string? inputAccountNumber)
+      {
+         throw new NotImplementedException();
+      }
+
+      public Task<List<CaSaResponse>?> GetGiroByCifNumAndAccountNumber(string? inputCifNum, string? inputAccountNumber)
+      {
+         throw new NotImplementedException();
       }
    }
 }

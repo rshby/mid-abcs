@@ -53,5 +53,31 @@ namespace inq_accont.Repositories
             throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
          }
       }
+
+      // method get data rekening saving by accountnumber
+      public async Task<ABCS_M_DDMAST?> GetSavingByAccountNumber(string? inputAccountNumber)
+      {
+         try
+         {
+            return await _db.ABCS_M_DDMAST.AsQueryable().FirstOrDefaultAsync<ABCS_M_DDMAST>(x => x.AccountType.Equals("S") && x.AccountNumber.Equals(inputAccountNumber));
+         }
+         catch (Exception err)
+         {
+            throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+         }
+      }
+
+      // method get data rekening giro by accountnumber
+      public async Task<ABCS_M_DDMAST?> GetGiroByAccountNumber(string? inputAccountNumber)
+      {
+         try
+         {
+            return await _db.ABCS_M_DDMAST.AsQueryable().FirstOrDefaultAsync<ABCS_M_DDMAST>(x => x.ProductType.Equals("D") && x.AccountNumber.Equals(inputAccountNumber));
+         }
+         catch (Exception err)
+         {
+            throw new GraphQLException(new ErrorBuilder().SetMessage(err.Message).Build());
+         }
+      }
    }
 }

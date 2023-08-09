@@ -12,6 +12,12 @@ namespace inq_accont.Models.Entity
       [GraphQLName("account_number")]
       public string? AccountNumber { get; set; }
 
+      [Column("ACCOUNTTYPE")]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("account_type")]
+      public string? AccountType { get; set; }
+
       [Column("CIFNUM")]
       [MaxLength(50)]
       [DefaultValue(null)]
