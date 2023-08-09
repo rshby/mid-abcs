@@ -2,5 +2,8 @@
 {
    public class CaSaResponse
    {
+      [GraphQLName("minimal_balance")]
+      [DefaultValue(null)]
+      public double? MinimalBalance { get; set; }
    }
 }

@@ -22,6 +22,7 @@ namespace inq_accont.Data
          modelBuilder.Entity<ABCS_M_GLMAST>().HasNoKey();
          modelBuilder.Entity<ABCS_M_LNMEMO>().HasNoKey();
          modelBuilder.Entity<ABCS_M_LNMAST>().HasNoKey();
+         modelBuilder.Entity<ABCS_P_DDPAR2>().HasNoKey();
       }
 
       // list a table
@@ -33,5 +34,6 @@ namespace inq_accont.Data
       public virtual DbSet<ABCS_M_GLMAST>? ABCS_M_GLMAST { get; set; }
       public virtual DbSet<ABCS_M_LNMEMO>? ABCS_M_LNMEMO { get; set; }
       public virtual DbSet<ABCS_M_LNMAST>? ABCS_M_LNMAST { get; set; }
+      public virtual DbSet<ABCS_P_DDPAR2>? ABCS_P_DDPAR2 { get; set; }
    }
 }

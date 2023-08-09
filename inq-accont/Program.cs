@@ -22,6 +22,7 @@ builder.Services.AddTransient<ABCS_M_GLMEMO_Repository>();
 builder.Services.AddTransient<ABCS_M_GLMAST_Repository>();
 builder.Services.AddTransient<ABCS_M_LNMAST_Repository>();
 builder.Services.AddTransient<ABCS_M_LNMEMO_Repository>();
+builder.Services.AddTransient<ABCS_P_DDPAR2_Repository>();
 
 // register Service Layer
 builder.Services.AddTransient<InterfaceInqCasaService, InqCasaService>();

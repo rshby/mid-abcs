@@ -11,18 +11,18 @@ namespace inq_accont.Resolver
    {
       // handler get data rekening casa by accountnumber
       [GraphQLName("abcs_inq_casa")]
-      public async Task<CaSaResponse?> GetCasaByAccountNumberAsync([Service] InterfaceInqCasaService inqCasaService, [Required] string? accountnumber) => await inqCasaService.GetByAccountNumberAsync(accountnumber);
+      public async Task<List<CaSaResponse>?> GetCasaByAccountNumberAsync([Service] InterfaceInqCasaService inqCasaService, [Required] string? account_number) => await inqCasaService.GetByAccountNumberAsync(account_number);
 
       // handler get data rekening deposit by accountnumber
       [GraphQLName("abcs_inq_deposit")]
-      public async Task<DepositAccountResponse?> GetDepositByAccountNumberAsync([Service] InterfaceInqDepositService inqDepositService, [Required] string? accountnumber) => await inqDepositService.GetByAccountNumberAsync(accountnumber);
+      public async Task<List<DepositAccountResponse>?> GetDepositByAccountNumberAsync([Service] InterfaceInqDepositService inqDepositService, [Required] string? account_number) => await inqDepositService.GetByAccountNumberAsync(account_number);
 
       // handler get data rekening gl by accountnumber
       [GraphQLName("abcs_inq_gl")]
-      public async Task<GlAccountResponse?> GetGlByAccountNumberAsync([Service] InterfaceInqGlService inqGlService, [Required] string? accountnumber) => await inqGlService.GetByAccountNumberAsync(accountnumber);
+      public async Task<List<GlAccountResponse>?> GetGlByAccountNumberAsync([Service] InterfaceInqGlService inqGlService, [Required] string? account_number) => await inqGlService.GetByAccountNumberAsync(account_number);
 
       // handler get data rekening loan by accountnumber
       [GraphQLName("abcs_inq_loan")]
-      public async Task<LoanAccountResponse?> GetLoanByAccountNumber([Service] InterfaceInqLoanService inqLoanService, [Required] string? accountnumber) => await inqLoanService.GetByAccountNumberAsync(accountnumber);
+      public async Task<List<LoanAccountResponse>?> GetLoanByAccountNumber([Service] InterfaceInqLoanService inqLoanService, [Required] string? account_number) => await inqLoanService.GetByAccountNumberAsync(account_number);
    }
 }

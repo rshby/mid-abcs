@@ -3,20 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace inq_accont.Models.Entity
 {
-   [Table("ABCS_M_LNMEMO")]
-   [GraphQLName("abcs_m_lnmemo")]
-   public class ABCS_M_LNMEMO
+   [Table("ABCS_P_DDPAR2")]
+   [GraphQLName("abcs_p_ddpar2")]
+   public class ABCS_P_DDPAR2
    {
-      [Required]
-      [Column("ACCOUNTNUMBER")]
-      [MaxLength(50)]
-      [GraphQLName("account_number")]
-      public string? AccountNumber { get; set; }
-
       [Column("PRODUCTTYPE")]
       [MaxLength(50)]
       [DefaultValue(null)]
       [GraphQLName("product_type")]
       public string? ProductType { get; set; }
+
+      [Column("MINIMUMBALANCE")]
+      [MaxLength(50)]
+      [DefaultValue(null)]
+      [GraphQLName("minimum_balance")]
+      public string? MinimumBalance { get; set; }
    }
 }

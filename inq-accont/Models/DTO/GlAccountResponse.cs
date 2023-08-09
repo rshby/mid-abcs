@@ -2,5 +2,8 @@
 {
    public class GlAccountResponse
    {
+      [GraphQLName("minimum_balance")]
+      [DefaultValue(null)]
+      public double? MinimumBalance { get; set; }
    }
 }
