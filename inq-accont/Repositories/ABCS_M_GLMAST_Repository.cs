@@ -1,5 +1,5 @@
 ﻿using inq_accont.Data;
-using inq_accont.Models.Entity;
+using dnet_models.Entity.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace inq_accont.Repositories
@@ -16,11 +16,11 @@ namespace inq_accont.Repositories
       }
 
       // method get data ABCS_M_GLMAST by accountnumber
-      public async Task<ABCS_M_GLMAST?> GetByAccountNumberAsync(string? inputAccountNumber)
+      public async Task<List<ABCS_M_GLMAST>?> GetByAccountNumberAsync(string? inputAccountNumber)
       {
          try
          {
-            return await _db.ABCS_M_GLMAST.AsQueryable().FirstOrDefaultAsync<ABCS_M_GLMAST>(x => x.AccountNumber == inputAccountNumber);
+            return await _db.ABCS_M_GLMAST.AsQueryable().Where(x => x.AccountNumber == inputAccountNumber).ToListAsync<ABCS_M_GLMAST>();
          }
          catch (Exception err)
          {

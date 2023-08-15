@@ -1,5 +1,5 @@
 ﻿using inq_accont.Data;
-using inq_accont.Models.Entity;
+using dnet_models.Entity.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace inq_accont.Repositories

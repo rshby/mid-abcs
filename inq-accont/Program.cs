@@ -10,10 +10,14 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // register DbContext
+string? middlewareConnectionString = builder.Configuration.GetConnectionString("MiddlewareDB");
+builder.Services.AddDbContext<MiddlewareDBContext>(x => x.UseSqlServer(middlewareConnectionString), ServiceLifetime.Transient);
+
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<InqAccountContext>(x => x.UseSqlServer(connectionString), ServiceLifetime.Transient);
 
 // register Repository Layer
+builder.Services.AddTransient<BRINJOURNALSEQ_Repository>();
 builder.Services.AddTransient<ABCS_M_DDMEMO_Repository>();
 builder.Services.AddTransient<ABCS_M_DDMAST_Repository>();
 builder.Services.AddTransient<ABCS_M_CDMEMO_Repository>();
@@ -23,6 +27,7 @@ builder.Services.AddTransient<ABCS_M_GLMAST_Repository>();
 builder.Services.AddTransient<ABCS_M_LNMAST_Repository>();
 builder.Services.AddTransient<ABCS_M_LNMEMO_Repository>();
 builder.Services.AddTransient<ABCS_P_DDPAR2_Repository>();
+builder.Services.AddTransient<ABCS_T_TLLOG_Repository>();
 
 // register Service Layer
 builder.Services.AddTransient<InterfaceInqCasaService, InqCasaService>();

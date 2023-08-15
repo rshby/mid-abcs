@@ -1,4 +1,4 @@
-﻿using inq_accont.Models.DTO;
+﻿using dnet_models.DTO.Core;
 
 namespace inq_accont.Services.GL
 {
